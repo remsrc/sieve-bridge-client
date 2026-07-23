@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtuelle Umgebungen
+.venv/
+venv/
+env/
+
+# Build-Artefakte
+build/
+dist/
+*.egg-info/
+*.whl
+
+# Tests und Analyse
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Editor
+.vscode/
+.idea/
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+
+# Lokale Dateien
+*.log
+*.tmp
+*.bak
+
+# Installer-/Build-Ausgaben
+SieveBridgeInstall.exe

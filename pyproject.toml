@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sieve-bridge-client"
+version = "0.2.0"
+description = "Native Messaging transport bridge for Sieve Reloaded"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "AGPL-3.0-or-later"}
+authors = [{name = "Sieve Reloaded contributors"}]
+dependencies = [
+  "keyring>=25.0,<26",
+  "secretstorage>=3.3.3; sys_platform == 'linux'",
+]
+
+[project.scripts]
+sieve-bridge-host = "sieve_bridge.host:main"
+sieve-bridge-install = "sieve_bridge.install:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
