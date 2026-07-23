@@ -63,7 +63,8 @@ jobs:
       - name: Verify entry point
         shell: bash
         run: |
-          test -f src/sieve_bridge/__main__.py
+          test -f sieve_bridge_launcher.py
+          test -f src/sieve_bridge/host.py
           ls -la src/sieve_bridge
 
       - name: Build standalone executable
@@ -73,9 +74,10 @@ jobs:
           --noconfirm
           --onefile
           --name SieveBridgeClient
+          --paths src
           --collect-all keyring
           --collect-submodules keyring.backends
-          src/sieve_bridge/__main__.py
+          sieve_bridge_launcher.py
 
       - name: Verify build output
         shell: bash
