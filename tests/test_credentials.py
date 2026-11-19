@@ -1,4 +1,6 @@
 import pytest
+from keyring.backends import SecretService, kwallet
+from keyring.backends.chainer import ChainerBackend
 
 from sieve_bridge.credentials import CredentialStore
 from sieve_bridge.errors import BridgeError
@@ -49,3 +51,26 @@ def test_unavailable_backend_is_rejected():
     with pytest.raises(BridgeError) as exc:
         store.set("account1", "secret")
     assert exc.value.code == "CREDENTIAL_BACKEND_UNAVAILABLE"
+
+def test_chained_backend_is_secure_when_all_contained_keyrings_are_insecure(monkeypatch : pytest.MonkeyPatch):
+    monkeypatch.setattr(ChainerBackend, 'backends', [  kwallet.DBusKeyring(), SecretService.Keyring() ] )
+    import keyring
+    keyring.set_keyring(ChainerBackend())
+    store = make_store()
+    store._keyring = keyring
+    actual = store._detect_backend()
+    assert actual.name == "keyring.backends.chainer.ChainerBackend"
+    assert actual.secure
+    assert actual.available
+
+def test_chained_backend_is_not_secure_when_one_contained_keyrings_is_insecure(monkeypatch : pytest.MonkeyPatch):
+    monkeypatch.setattr(ChainerBackend, 'backends', [  FakeKeyring(), SecretService.Keyring() ] )
+    import keyring
+    keyring.set_keyring(ChainerBackend())
+    store = make_store()
+    store._keyring = keyring
+    actual = store._detect_backend()
+    assert actual.name == "keyring.backends.chainer.ChainerBackend"
+    assert not actual.secure
+    assert not actual.available
+    assert actual.reason == "No supported secure operating-system credential backend is active"
