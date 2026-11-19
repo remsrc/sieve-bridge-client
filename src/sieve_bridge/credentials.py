@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from keyring.backends.chainer import ChainerBackend
+
 from .errors import BridgeError
 
 SERVICE_NAME = "Sieve Reloaded"
@@ -35,8 +37,10 @@ class CredentialStore:
         self._backend = None
         self._info = self._detect_backend()
 
-    @staticmethod
-    def _is_secure_backend(backend: Any) -> bool:
+    def _is_secure_backend(self, backend: Any) -> bool:
+        if isinstance(backend, ChainerBackend):
+            return not backend.backends or self._is_secure_backend(backend.backends[0])
+
         identity = (
             f"{backend.__class__.__module__}.{backend.__class__.__name__}"
         ).lower()
