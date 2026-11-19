@@ -56,6 +56,7 @@ class CredentialStore:
             "keyring.backends.macos",
             "keyring.backends.secretservice",
             "keyring.backends.libsecret",
+            "keyring.backends.chainer.chainerbackend",
             "kwallet",
         )
         return any(marker in identity for marker in secure_markers)
